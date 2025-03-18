@@ -4,7 +4,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const routes = require('./routes');
-const errorHandler = require('./middleware/errorHandler');
+const errorHandler = require('./middleware/errorHandlers');
 
 // Initialize express app
 const app = express();

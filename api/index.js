@@ -7,8 +7,7 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const indexRouter = require('../src/routes/index');
-const errorhandler = require('../src/middleware/errorHandler');
-// Initialize express app
+const errorHandler = require('../src/middleware/errorHandlers');// Initialize express app
 const app = express();
 
 // Database connection with mongoose (optimized for serverless)
@@ -79,11 +78,6 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'Lead management API is running' });
 });
 
-// Routes
-app.use('/', indexRouter);
-
-// Add this to your api/index.js file
-
 // Debug endpoint to check environment variables and connection status
 app.get('/debug', async (req, res) => {
     try {
@@ -121,6 +115,9 @@ app.get('/debug', async (req, res) => {
     }
   });
 
+// Routes
+app.use('/', indexRouter);
+
 // 404 handler
 app.use((req, res, next) => {
   res.status(404).json({
@@ -130,7 +127,7 @@ app.use((req, res, next) => {
 });
 
 // Error handler
-app.use(errorhandler);
+app.use(errorHandler);
 
 // Export the Express app
 module.exports = app;
