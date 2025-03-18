@@ -12,11 +12,16 @@ const errorHandler = require('../src/middleware/errorHandler');
 // Initialize express app
 const app = express();
 
-// Connect to MongoDB (only if not already connected)
+// Database connection with mongoose (optimized for serverless)
 const connectDB = async () => {
+  // Only connect if not already connected
   if (mongoose.connection.readyState === 0) {
     try {
-      await mongoose.connect(process.env.MONGO_URI);
+      await mongoose.connect(process.env.MONGO_URI, {
+        // These options help with serverless environments
+        serverSelectionTimeoutMS: 5000,
+        maxPoolSize: 10 // Reduce from the default of 100
+      });
       console.log('MongoDB connected');
     } catch (error) {
       console.error(`MongoDB connection error: ${error.message}`);
@@ -70,8 +75,52 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
 
+// Root route for testing
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'Lead management API is running' });
+});
+
 // Routes
 app.use('/', indexRouter);
+
+// Add this to your api/index.js file
+
+// Debug endpoint to check environment variables and connection status
+app.get('/debug', async (req, res) => {
+    try {
+      // Check environment variables (don't expose sensitive values)
+      const envCheck = {
+        NODE_ENV: process.env.NODE_ENV,
+        MONGO_URI_EXISTS: !!process.env.MONGO_URI,
+        JWT_SECRET_EXISTS: !!process.env.JWT_SECRET,
+        JWT_EXPIRE_EXISTS: !!process.env.JWT_EXPIRE,
+        JWT_COOKIE_EXPIRE_EXISTS: !!process.env.JWT_COOKIE_EXPIRE
+      };
+      
+      // Check MongoDB connection
+      const mongoStatus = {
+        connectionState: mongoose.connection.readyState,
+        // 0 = disconnected, 1 = connected, 2 = connecting, 3 = disconnecting
+        connectionStateName: ['disconnected', 'connected', 'connecting', 'disconnecting'][mongoose.connection.readyState]
+      };
+      
+      // Return debug info
+      res.status(200).json({
+        timestamp: new Date().toISOString(),
+        environment: envCheck,
+        mongoStatus,
+        vercel: {
+          isVercel: !!process.env.VERCEL,
+          region: process.env.VERCEL_REGION
+        }
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: error.message,
+        stack: process.env.NODE_ENV === 'production' ? '(hidden in production)' : error.stack
+      });
+    }
+  });
 
 // 404 handler
 app.use((req, res, next) => {
