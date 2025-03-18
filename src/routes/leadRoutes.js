@@ -8,12 +8,12 @@ const {
   exportLeads
 } = require('../controllers/leadController');
 const { validateLeadInput,validateUpdateLeadInput } = require('../middleware/validator');
-
+const { protect } = require('../middleware/auth');
 const router = express.Router();
 
 router.route('/')
   .get(getLeads)
-  .post(validateLeadInput, createLead);
+  .post(protect, validateLeadInput, createLead);
 
 router.route('/export')
   .get(exportLeads);
