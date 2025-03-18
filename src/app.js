@@ -32,6 +32,10 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
 
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'Hello this is lead management api' });
+});
+
 // Error handling middleware
 app.use(errorHandler);
 
