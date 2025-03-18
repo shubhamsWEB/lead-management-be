@@ -7,7 +7,6 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const indexRouter = require('../src/routes/index');
-const errorHandler = require('../src/middleware/errorHandler');
 
 // Initialize express app
 const app = express();
