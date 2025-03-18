@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a RESTful API backend for a Lead Management application built with Node.js, Express, and MongoDB. The application helps sales teams manage their leads effectively by providing features like lead tracking, filtering, searching, and exporting.
+This is a RESTful API backend for a Lead Management application built with Node.js, Express, and MongoDB. The application has lead tracking, filtering, searching, and exporting features.
 
 ## Features
 
