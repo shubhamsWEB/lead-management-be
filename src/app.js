@@ -4,7 +4,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const routes = require('./routes');
-const errorHandler = require('./middleware/errorHandler');
+const errorHandler = require('./middleware/errorHandlers');
 
 // Initialize express app
 const app = express();
@@ -30,6 +30,10 @@ app.use('/api', routes);
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
+});
+
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'Hello this is lead management api' });
 });
 
 // Error handling middleware
