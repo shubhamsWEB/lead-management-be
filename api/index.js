@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const indexRouter = require('../src/routes/index');
-
+const errorhandler = require('../src/middleware/errorHandler');
 // Initialize express app
 const app = express();
 
@@ -130,7 +130,7 @@ app.use((req, res, next) => {
 });
 
 // Error handler
-app.use(errorHandler);
+app.use(errorhandler);
 
 // Export the Express app
 module.exports = app;
